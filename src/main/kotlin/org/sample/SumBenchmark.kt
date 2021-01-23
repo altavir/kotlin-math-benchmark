@@ -1,9 +1,10 @@
 package org.sample
 
+import kscience.kmath.nd.NDAlgebra
+import kscience.kmath.nd.NDStructure
+import kscience.kmath.nd.RealNDField
+import kscience.kmath.nd.real
 import kscience.kmath.operations.invoke
-import kscience.kmath.structures.NDField
-import kscience.kmath.structures.RealNDElement
-import kscience.kmath.structures.RealNDField
 import org.jetbrains.bio.viktor.F64Array
 import org.jetbrains.bio.viktor.asF64Array
 import org.jetbrains.kotlinx.multik.api.Multik
@@ -73,8 +74,8 @@ open class ElementwiseSumBenchmark {
     lateinit var multikArray1: Ndarray<Double, D1>
     lateinit var multikArray2: Ndarray<Double, D1>
     lateinit var field: RealNDField
-    lateinit var kmathArray1: RealNDElement
-    lateinit var kmathArray2: RealNDElement
+    lateinit var kmathArray1: NDStructure<Double>
+    lateinit var kmathArray2: NDStructure<Double>
     lateinit var viktorArray1: F64Array
     lateinit var viktorArray2: F64Array
 
@@ -84,7 +85,7 @@ open class ElementwiseSumBenchmark {
         src2 = DoubleArray(arraySize) { RANDOM.nextDouble() }
         multikArray1 = Multik.ndarray(src1)
         multikArray2 = Multik.ndarray(src2)
-        field = NDField.real(arraySize)
+        field = NDAlgebra.real(arraySize)
         kmathArray1 = field.produce { a -> src1[a[0]] }
         kmathArray2 = field.produce { a -> src2[a[0]] }
         viktorArray1 = src1.asF64Array()

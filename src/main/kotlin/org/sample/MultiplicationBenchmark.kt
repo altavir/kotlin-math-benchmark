@@ -1,9 +1,10 @@
 package org.sample
 
+import kscience.kmath.nd.NDAlgebra
+import kscience.kmath.nd.NDBuffer
+import kscience.kmath.nd.RealNDField
+import kscience.kmath.nd.real
 import kscience.kmath.operations.invoke
-import kscience.kmath.structures.NDField
-import kscience.kmath.structures.RealNDElement
-import kscience.kmath.structures.RealNDField
 import org.jetbrains.bio.viktor.F64Array
 import org.jetbrains.bio.viktor.asF64Array
 import org.jetbrains.kotlinx.multik.api.Multik
@@ -18,11 +19,12 @@ import kotlin.random.Random
 
 @Warmup(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 10, time = 10, timeUnit = TimeUnit.SECONDS)
-@Fork(2)
+@Fork(1)
 @State(Scope.Benchmark)
 open class MultiplicationBenchmark {
 
-    @Param("100", "1000", "10000", "100000", "1000000", "10000000")
+    //@Param("100", "1000", "10000", "100000", "1000000", "10000000")
+    @Param("1000000")
     var arraySize: Int = 0
 
     private var src1: DoubleArray = DoubleArray(0)
@@ -30,8 +32,8 @@ open class MultiplicationBenchmark {
     lateinit var multikArray1: Ndarray<Double, D1>
     lateinit var multikArray2: Ndarray<Double, D1>
     lateinit var field: RealNDField
-    lateinit var kmathArray1: RealNDElement
-    lateinit var kmathArray2: RealNDElement
+    lateinit var kmathArray1: NDBuffer<Double>
+    lateinit var kmathArray2: NDBuffer<Double>
     lateinit var viktorArray1: F64Array
     lateinit var viktorArray2: F64Array
 
@@ -41,7 +43,7 @@ open class MultiplicationBenchmark {
         src2 = DoubleArray(arraySize) { RANDOM.nextDouble() }
         multikArray1 = Multik.ndarray(src1)
         multikArray2 = Multik.ndarray(src2)
-        field = NDField.real(arraySize)
+        field = NDAlgebra.real(arraySize)
         kmathArray1 = field.produce { (a) -> src1[a] }
         kmathArray2 = field.produce { (a) -> src2[a] }
         viktorArray1 = src1.asF64Array()

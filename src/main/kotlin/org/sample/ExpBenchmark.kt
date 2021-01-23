@@ -1,8 +1,9 @@
 package org.sample
 
-import kscience.kmath.structures.NDField
-import kscience.kmath.structures.RealNDElement
-import kscience.kmath.structures.RealNDField
+import kscience.kmath.nd.NDAlgebra
+import kscience.kmath.nd.NDStructure
+import kscience.kmath.nd.RealNDField
+import kscience.kmath.nd.real
 import org.apache.commons.math3.util.FastMath
 import org.jetbrains.bio.viktor.F64Array
 import org.jetbrains.bio.viktor.asF64Array
@@ -27,14 +28,14 @@ open class ExpBenchmark {
     lateinit var src: DoubleArray
     lateinit var multikArray: Ndarray<Double, D1>
     lateinit var field: RealNDField
-    lateinit var kmathArray: RealNDElement
+    lateinit var kmathArray: NDStructure<Double>
     lateinit var viktorArray: F64Array
 
     @Setup
     fun setup() {
         src = DoubleArray(arraySize) { RANDOM.nextDouble() }
         multikArray = Multik.ndarray(src)
-        field = NDField.real(arraySize)
+        field = NDAlgebra.real(arraySize)
         kmathArray = field.produce { a -> src[a[0]] }
         viktorArray = src.asF64Array()
     }
